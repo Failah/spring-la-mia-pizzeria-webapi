@@ -12,7 +12,7 @@
         <h1 class="mt-5 mb-4 pt-5 text-center">Modifica offerta speciale</h1>
         <div class="row justify-content-center">
             <div class="col-lg-6">
-                <form th:object="${specialOffer}" th:action="@{/special-offer/update}" method="post">
+                <form th:object="${specialOffer}" th:action="@{/special-offers/update}" method="post">
                     <input type="hidden" th:field="*{id}" th:value="*{id}" />
 					<input type="hidden" th:name="pizzaId" th:value="${specialOffer.pizza.id}" />
 

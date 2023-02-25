@@ -33,7 +33,7 @@
 										onclick="return confirm('Sei sicuro di voler eliminare questa pizza?');">
 										Elimina Pizza</button>
 								</form>
-								
+
 							</div>
 							<div class="col-6">
 								<h3>Ingredienti:</h3>
@@ -45,19 +45,21 @@
 
 						<div class="mt-4">
 							<h3>Offerte speciali:</h3>
-							<ul>
+							<ul th:if="${not #lists.isEmpty(pizza.specialOffer)}">
 								<li th:each="specialOffer : ${pizza.specialOffer}"><a
-									th:href="@{/special-offer/edit/{id}(id=${specialOffer.id})}">
+									th:href="@{/special-offers/edit/{id}(id=${specialOffer.id})}">
 										<span th:text="${specialOffer.title}"></span>
 								</a> <span
 									th:text="' dal ' + ${#temporals.format(specialOffer.startDate, 'dd/MM/yyyy')} + ' al ' + ${#temporals.format(specialOffer.endDate, 'dd/MM/yyyy')}"></span>
 								</li>
-
 							</ul>
+							<p th:if="${#lists.isEmpty(pizza.specialOffer)}">Nessuna
+								offerta speciale al momento.</p>
 							<a class="btn btn-success mt-3"
-								th:href="@{|/special-offer/create?pizzaId=${pizza.id}|}">Crea
+								th:href="@{|/special-offers/create?pizzaId=${pizza.id}|}">Crea
 								nuova offerta speciale</a>
 						</div>
+
 
 					</div>
 				</div>

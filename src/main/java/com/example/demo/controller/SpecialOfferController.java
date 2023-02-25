@@ -22,7 +22,7 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 
 @Controller
-@RequestMapping("/special-offer")
+@RequestMapping("/special-offers")
 public class SpecialOfferController {
 
 	@Autowired
@@ -33,10 +33,10 @@ public class SpecialOfferController {
 
 	@GetMapping()
 	public String index(Model model) {
-		List<SpecialOffer> specialOfferList = specialOfferRepository.findAll();
-		model.addAttribute("specialOfferList", specialOfferList);
+		List<SpecialOffer> specialOffers = specialOfferRepository.findAll();
+		model.addAttribute("specialOffers", specialOffers);
 
-		return "special-offer/index";
+		return "special-offers/index";
 	}
 
 	@GetMapping("/create")
@@ -52,22 +52,27 @@ public class SpecialOfferController {
 			throw new Exception("This pizza does not exist. Id=" + pizzaId);
 		}
 
+		model.addAttribute("pizzaId", pizzaId);
 		model.addAttribute("specialOffer", specialOffer);
 
-		return "special-offer/create";
+		return "special-offers/create";
 	}
 
-	@PostMapping("/create")
+	@PostMapping("/store")
 	public String store(@Valid @ModelAttribute("specialOffer") SpecialOffer formSpecialOffer,
-			BindingResult bindingResult, Model model) {
-
+			BindingResult bindingResult, Model model, @RequestParam("pizzaId") String name) {
+		System.out.println();
 		if (bindingResult.hasErrors())
-			return "special-offer/create";
+			return "special-offers/create";
+
+		Integer pizzaId = (int) Long.parseLong(name);
+		Pizza pizza = pizzaRepository.getReferenceById(pizzaId);
+
+		formSpecialOffer.setPizza(pizza);
 
 		specialOfferRepository.save(formSpecialOffer);
 
-		return "redirect:/pizzas";
-
+		return "redirect:/pizzas/" + pizzaId;
 	}
 
 	@GetMapping("/edit/{id}")
@@ -77,7 +82,7 @@ public class SpecialOfferController {
 			throw new RuntimeException("SpecialOffer not found");
 		}
 		model.addAttribute("specialOffer", specialOffer);
-		return "special-offer/edit";
+		return "special-offers/edit";
 	}
 
 	@PostMapping("/update")
@@ -90,7 +95,14 @@ public class SpecialOfferController {
 		specialOffer.setPizza(pizza);
 
 		specialOfferRepository.save(specialOffer);
-		return "redirect:/pizzas";
+
+		return "redirect:/pizzas/" + pizzaId;
+	}
+
+	@PostMapping("/delete/{id}")
+	public String delete(@PathVariable("id") Long id) {
+		specialOfferRepository.deleteById(id);
+		return "redirect:/special-offers";
 	}
 
 	// redirectAttributes.addAttribute("id", pizzaId);
