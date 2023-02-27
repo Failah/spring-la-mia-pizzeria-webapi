@@ -64,6 +64,7 @@ public class PizzaControllerApi {
 	public Pizza update(@RequestBody Pizza pizza, @PathVariable("id") Integer id) {
 		Pizza b = pizzaRepository.getReferenceById(id);
 		b.setName(pizza.getName());
+		b.setPrice(pizza.getPrice());
 		return pizzaRepository.save(b);
 	}
 
